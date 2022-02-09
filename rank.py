@@ -2,7 +2,6 @@ import sys; args=sys.argv[1:]
 import json
 
 artistdict = {}
-# format:
 # 0: total score
 # 1: # of tracks
 # 2: dict with key of genre and value of amount of tracks
@@ -11,9 +10,7 @@ artistdict = {}
 # 5: lowest track
 # 6: lowest score
 
-# open tsv
 with open(args[0]) as f:
-   # parse each track line by line
    for line in f:
       trackdata = line.split('\t')
       # important indexes:
@@ -53,5 +50,15 @@ with open(args[0]) as f:
             artistdict[artist][6] = trackscore
 
 # test print
-with open('results.json', 'w') as out:
-   json.dump(artistdict, out)
+#with open('results.json', 'w') as out:
+#   json.dump(artistdict, out)
+
+# output as tsv
+with open('result.tsv', 'w') as result:
+   # first line
+   result.write('Artist\tRating\t# of Tracks\tMain Genre\tHighest Track\tLowest Track\n')
+
+   for artist in artistdict:
+      if artistdict[artist][1]>3:
+         # format: artist, rating, track count, main genre, highest track, lowest track
+         result.write(artist+'\t'+str((artistdict[artist][0]/artistdict[artist][1]+2)/4)+'\t'+str(artistdict[artist][1])+'\t'+max(artistdict[artist][2], key=artistdict[artist][2].get)+'\t'+artistdict[artist][3]+'\t'+artistdict[artist][5]+'\n')
