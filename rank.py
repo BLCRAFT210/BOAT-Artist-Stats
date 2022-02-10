@@ -12,7 +12,7 @@ artistdict = {}
 
 with open(args[0]) as f:
    for line in f:
-      trackdata = line.split('\t')
+      trackdata = line.split('\t')[1:]
       # important indexes:
       # 0: artist(s)
       # 1: song name
@@ -59,6 +59,6 @@ with open('result.tsv', 'w') as result:
    result.write('Artist\tRating\t# of Tracks\tMain Genre\tHighest Track\tLowest Track\n')
 
    for artist in artistdict:
-      if artistdict[artist][1]>3:
+      if artistdict[artist][1]>=3:
          # format: artist, rating, track count, main genre, highest track, lowest track
          result.write(artist+'\t'+str((artistdict[artist][0]/artistdict[artist][1]+2)/4)+'\t'+str(artistdict[artist][1])+'\t'+max(artistdict[artist][2], key=artistdict[artist][2].get)+'\t'+artistdict[artist][3]+'\t'+artistdict[artist][5]+'\n')
