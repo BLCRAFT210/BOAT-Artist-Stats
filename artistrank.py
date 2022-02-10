@@ -54,7 +54,7 @@ with open(args[0]) as f:
 #   json.dump(artistdict, out)
 
 # output as tsv
-with open('result.tsv', 'w') as result:
+with open('artistsresult.tsv', 'w') as result:
    # first line
    result.write('Artist\tRating\t# of Tracks\tMain Genre\tHighest Track\tLowest Track\n')
 
