@@ -1,5 +1,4 @@
 import sys; args=sys.argv[1:]
-import json
 
 artistdict = {}
 # 0: total score
@@ -48,10 +47,6 @@ with open(args[0]) as f:
          if trackscore<artistdict[artist][6]:
             artistdict[artist][5] = trackdata[1]
             artistdict[artist][6] = trackscore
-
-# test print
-#with open('results.json', 'w') as out:
-#   json.dump(artistdict, out)
 
 # output as tsv
 with open('artistsresult.tsv', 'w') as result:
