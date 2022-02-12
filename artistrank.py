@@ -1,4 +1,5 @@
 import sys; args=sys.argv[1:]
+import re
 
 artistdict = {}
 # 0: total score
@@ -19,8 +20,15 @@ with open(args[0]) as f:
       # 9: total score
       # 10: total participants
 
+      artists = []
+      remixerSearch = re.search('[^\(]+(?= Remix\))',trackdata[1])
+      if (remixerSearch == None):
+         artists = trackdata[0].split(', ')
+      else:
+         artists = remixerSearch.group().split(', ')
+      
       # run stats for each artist in the track
-      for artist in trackdata[0].split(', '):
+      for artist in artists:
          trackscore = int(trackdata[9])/int(trackdata[10])
          
          # create key in dict if it doesn't exist
