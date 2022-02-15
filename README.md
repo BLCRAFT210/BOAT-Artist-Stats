@@ -1,0 +1,1 @@
+This was used to generate artist stats and find missing tracks on NCS: BOAT, a community ranking of every single track released or uploaded to the music label NoCopyrightSounds. The results are available at https://bit.ly/NCSBOAT.
