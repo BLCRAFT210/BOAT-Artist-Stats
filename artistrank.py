@@ -1,8 +1,10 @@
 import re
 import sys
+from datetime import datetime
 args = sys.argv[1:]
 
 SCALING_FACTOR = 1.5
+DATE_FORMAT = "%m/%d/%Y"
 
 artistdict = {}
 
@@ -26,12 +28,12 @@ with open(args[0]) as f:
         # run stats for each artist in the track
         for artist in artists:
             trackscore = float(trackdata[11])
-            release_date = trackdata[3]
+            release_date = datetime.strptime(trackdata[3], DATE_FORMAT)
 
             # create key in dict if it doesn't exist
             if artist not in artistdict:
                 artistdict[artist] = [0, 0, {}, '', -3,
-                                      '', 3, '9999-99-99', '0000-00-00', []]
+                                      '', 3, datetime.max, datetime.min, []]
 
             # update total score
             artistdict[artist][0] += trackscore
@@ -70,10 +72,10 @@ artist_scores = []
 for artist in artistdict:
     if artistdict[artist][1] >= 3:
         sorted_scores = sorted(artistdict[artist][9], reverse=True)
-        weighted_score = sum(score * (1 - (i / (len(sorted_scores) + 1)) ** SCALING_FACTOR)
+        weighted_score = sum(score * (1 - (i / len(sorted_scores)) ** SCALING_FACTOR)
                              for i, score in enumerate(sorted_scores))
         geometric_sum = sum(
-            (1 - (i / (len(sorted_scores) + 1)) ** SCALING_FACTOR) for i in range(artistdict[artist][1]))
+            (1 - (i / len(sorted_scores)) ** SCALING_FACTOR) for i in range(artistdict[artist][1]))
         normalized_score = weighted_score / geometric_sum
         artist_scores.append((artist, artistdict[artist], normalized_score))
 
@@ -87,12 +89,14 @@ with open('artistsresult.tsv', 'w') as result:
         'Artist\t# of Tracks\tMain Genre\tDebut\tRecent\tHighest Track\tLowest Track\tScore\n')
 
     for artist, data, normalized_score in artist_scores:
+        debut_date = data[7].strftime("%m/%d/%Y").lstrip("0").replace("/0", "/")
+        recent_date = data[8].strftime("%m/%d/%Y").lstrip("0").replace("/0", "/")
         result.write(
             artist + '\t' +
             str(data[1]) + '\t' +
             max(data[2], key=data[2].get) + '\t' +
-            data[7] + '\t' +
-            data[8] + '\t' +
+            debut_date + '\t' +
+            recent_date + '\t' +
             data[3] + '\t' +
             data[5] + '\t' +
             str(normalized_score) + '\n'
