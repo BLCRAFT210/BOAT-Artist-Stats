@@ -2,7 +2,7 @@ import re
 import sys
 args = sys.argv[1:]
 
-SCALING_FACTOR = 0.8
+SCALING_FACTOR = 1.5
 
 artistdict = {}
 
@@ -70,10 +70,10 @@ artist_scores = []
 for artist in artistdict:
     if artistdict[artist][1] >= 3:
         sorted_scores = sorted(artistdict[artist][9], reverse=True)
-        weighted_score = sum(score * (SCALING_FACTOR ** i)
+        weighted_score = sum(score * (1 - (i / (len(sorted_scores) + 1)) ** SCALING_FACTOR)
                              for i, score in enumerate(sorted_scores))
         geometric_sum = sum(
-            SCALING_FACTOR ** i for i in range(artistdict[artist][1]))
+            (1 - (i / (len(sorted_scores) + 1)) ** SCALING_FACTOR) for i in range(artistdict[artist][1]))
         normalized_score = weighted_score / geometric_sum
         artist_scores.append((artist, artistdict[artist], normalized_score))
 
